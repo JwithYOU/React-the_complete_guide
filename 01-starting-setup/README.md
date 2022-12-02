@@ -55,3 +55,13 @@ function ExpenseForm(props) {
 ```
 
 NewExpense.js에서 선언된 saveExpenseDataHandler()를 props를 통해서 ExpenseForm.js에 전달한다.
+
+---
+
+</br>
+
+## 2022.12.02.(금)
+
+### Chapter - Section4: 63~
+
+<br/>
