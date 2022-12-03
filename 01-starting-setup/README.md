@@ -65,3 +65,63 @@ NewExpense.js에서 선언된 saveExpenseDataHandler()를 props를 통해서 Exp
 ### Chapter - Section4: 63~
 
 <br/>
+1. 
+App.js에 있는 expenses를 Expense.js에 props로 전달해서 하드코딩으로 렌더링 하던 것을 map함수를 사용해서 렌더링함 
+useState를 사용해서 Add Expense 버튼이 눌렸을 때 입력된 데이터가 expenses에 업데이트 될 수 있도록 적용
+
+```js
+const filteredExpenses = props.items.filter((expense) => {
+  return expense.date.getFullYear().toString() === filteredYear;
+});
+```
+
+이렇게 해서 년도를 변경하면 해당하는 년도에 expense만 리스트에 나타난다.
+<br/>
+아래 코드를 추가해줌으로서 expense가 존재하지 않으면 "No expense found." 라는 텍스트를 출력한다.
+
+```js
+// Expense.js
+
+let expenseContent = <p>No expense found.</p>;
+
+if (filteredExpenses.length > 0) {
+  expenseContent = filteredExpenses.map((expense) => (
+    <ExpenseItem
+      key={expense.id}
+      title={expense.title}
+      amount={expense.amount}
+      date={expense.date}
+    />
+  ));
+}
+```
+
+<br/>
+버튼 클릭으로 ExpenseForm 사라지고 나타나게 할 수 있도록 적용
+그리고 cancel버튼 눌렀을 때 isEditing의 상태가 변경 될 수 있도록
+props로 cancelHandler함수를 전달
+
+```js
+// Expense.js
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const startEditingHandler = () => {
+    setIsEditing(true);
+  }
+
+  const cancelHandler = () => {
+    setIsEditing(false);
+  }
+
+  return (
+    <div className="new-expense">
+      {!isEditing && <button onClick={startEditingHandler}>Add New Expense</button>}
+      {isEditing && <ExpenseForm
+      onSaveExpenseData={saveExpenseDataHandler} onCancelHandler={cancelHandler}/>}
+    </div>
+  );
+};
+
+export default NewExpense;
+```
