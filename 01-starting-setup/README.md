@@ -62,7 +62,7 @@ NewExpense.js에서 선언된 saveExpenseDataHandler()를 props를 통해서 Exp
 
 ## 2022.12.02.(금)
 
-### Chapter - Section4: 63~
+### Chapter - Section4: 63~67, Section5: 68~76
 
 <br/>
 1. 
@@ -124,4 +124,174 @@ props로 cancelHandler함수를 전달
 };
 
 export default NewExpense;
+```
+
+---
+
+</br>
+
+## 2022.12.05.(dnjf)
+
+### Chapter - Section5: 77~82
+
+<br/>
+
+1. ExpenseList.js 파일을 추가해서 Expense.js의 컴포넌트를 좀 더 깔끔하게 정리했다.
+
+```js
+//ExpenseList.js
+
+import React from "react";
+import ExpenseItem from "./ExpenseItem";
+import "./ExpenseList.css";
+
+const ExpenseList = (props) => {
+  if (props.onFilteredExpense.length === 0) {
+    return <h2 className="expenses-list__fallback">Found no expense.</h2>;
+  }
+
+  return (
+    <ul className="expenses-list">
+      {props.onFilteredExpense.map((expense) => (
+        <ExpenseItem
+          key={expense.id}
+          title={expense.title}
+          amount={expense.amount}
+          date={expense.date}
+        />
+      ))}
+    </ul>
+  );
+};
+
+export default ExpenseList;
+```
+
+```js
+// Expense.js
+
+import React, { useState } from "react";
+import "./Expense.css";
+import Card from "../UI/Card";
+import ExpensesFilter from "./ExpensesFilter";
+import ExpenseList from "./ExpenseList";
+
+function Expense(props) {
+  const [filteredYear, setFilteredYear] = useState("2020");
+
+  function filterChangeHandler(selectedYear) {
+    setFilteredYear(selectedYear);
+  }
+
+  const filteredExpenses = props.expenses.filter((expense) => {
+    return expense.date.getFullYear().toString() === filteredYear;
+  });
+
+  return (
+    <div>
+      <Card className="expenses">
+        <ExpensesFilter
+          selected={filteredYear}
+          onFilterChange={filterChangeHandler}
+        />
+        <ExpenseList onFilteredExpense={filteredExpenses} />
+      </Card>
+    </div>
+  );
+}
+
+export default Expense;
+```
+
+<br/>
+2. Chart UI를 구현할 수 있게 Chart.js, ChartBar.js, ExpenseChart.js 추가
+
+```js
+//Chart.js
+
+import React from "react";
+
+import ChartBar from "./ChartBar";
+import "./Chart.css";
+
+const Chart = (props) => {
+  const dataPointValues = props.dataPoints.map((dataPoint) => dataPoint.value);
+  const totalMaximum = Math.max(...dataPointValues);
+
+  return (
+    <div className="chart">
+      {props.dataPoints.map((dataPoint) => (
+        <ChartBar
+          key={dataPoint.label}
+          value={dataPoint.value}
+          maxValue={totalMaximum}
+          label={dataPoint.label}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default Chart;
+```
+
+```js
+// ChartBar.js
+
+import React from "react";
+import "./ChartBar.css";
+
+const ChartBar = (props) => {
+  let barFillHeight = "0%";
+
+  if (props.maxValue > 0) {
+    barFillHeight = Math.round((props.value / props.maxValue) * 100) + "%";
+  }
+
+  return (
+    <div className="chart-bar">
+      <div className="chart-bar__inner">
+        <div
+          className="chart-bar__fill"
+          style={{ height: barFillHeight }}
+        ></div>
+      </div>
+      <div className="chart-bar__label">{props.label}</div>
+    </div>
+  );
+};
+
+export default ChartBar;
+```
+
+```js
+// ExpenseChart.js
+
+import React from "react";
+import Chart from "../Chart/Chart";
+
+const ExpenseChart = (props) => {
+  const chartDataPoints = [
+    { label: "Jan", value: 0 },
+    { label: "Feb", value: 0 },
+    { label: "Mar", value: 0 },
+    { label: "Apr", value: 0 },
+    { label: "May", value: 0 },
+    { label: "Jun", value: 0 },
+    { label: "Aug", value: 0 },
+    { label: "Sep", value: 0 },
+    { label: "Oct", value: 0 },
+    { label: "Nov", value: 0 },
+    { label: "Dec", value: 0 },
+  ];
+
+  for (const expense of props.expenses) {
+    const expenseMonth = expense.date.getMonth();
+    chartDataPoints[expenseMonth].value += expense.amount;
+  }
+
+  return <Chart dataPoints={chartDataPoints} />;
+};
+
+export default ExpenseChart;
 ```
