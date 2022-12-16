@@ -173,3 +173,23 @@ const Login = (props) => {
 
 export default Login;
 ```
+
+## 2022.12.16.(금)
+
+### Chapter - Section10: 118~126
+
+<br/>
+
+## useReducer
+
+<br/>
+2. 이메일과 비밀번호를 조건에 맞게 입력해도 로그인 버튼이 활성되지 않았는데 그 이유는 useEffect에 클린업 함수로 적용하고 있어서
+formIsValid 값이 변경되지 않았던 것이다.
+
+```js
+useEffect(() => {
+  console.log("EFFECT RUNNING");
+  console.log(emailState.isValid, pswState.isValid);
+  setFormIsValid(pswState.isValid && emailState.isValid);
+}, [emailIsValid, pswIsValid]);
+```
