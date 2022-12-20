@@ -1,11 +1,17 @@
+import { Fragment } from "react";
 import { useRouter } from "next/router";
 
 function DetailPage() {
   const router = useRouter();
 
-  console.log(router.query.newsId);
+  const newsId = router.query.newsId;
 
-  return <h1>Detail Page</h1>;
+  return (
+    <Fragment>
+      <h1>Detail Page</h1>
+      <p>{newsId}</p>
+    </Fragment>
+  );
 }
 
 export default DetailPage;
