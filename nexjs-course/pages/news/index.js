@@ -7,7 +7,7 @@ function NewsPage() {
       <h1>The News Page</h1>
       <ul>
         <li>
-          <Link href="news/good-news">good-news</Link>
+          <a href="news/good-news">good-news</a>
         </li>
         <li>
           <Link href="news/bad-news">bad-news</Link>
